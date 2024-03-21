@@ -8,22 +8,14 @@ const app = express();
 app.use(handler);
 app.listen(3000, () => {
 	console.log('listening on port 3000');
+	console.log('http://localhost:3000');
 });
 
 const ws = new WebSocket('ws://localhost:8001');
 ws.on('error', console.error);
 
-// const username = process.env.TWITCH_USERNAME;
-// const password = process.env.ACCESS_TOKEN;
 const twitchChannel = process.env.TWITCH_CHANNEL ?? '';
 
-// const client = new tmi.Client({
-// 	identity: {
-// 		username,
-// 		password
-// 	},
-// 	channels: [twitchChannel]
-// });
 const client = new tmi.Client({ channels: [twitchChannel] });
 client.connect().catch(console.error);
 client.on('message', (channel, tags, message) => {

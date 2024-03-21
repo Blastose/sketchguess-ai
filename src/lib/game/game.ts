@@ -1,3 +1,7 @@
 export class Game {
-	constructor() {}
+	initialState: string
+
+	constructor() {
+		this.initialState = ""
+	}
 }
