@@ -13,10 +13,13 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
+		"@sveltejs/adapter-node": "^5.0.1",
 		"@sveltejs/kit": "^2.5.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@types/eslint": "^8.56.0",
 		"@types/p5": "^1.7.6",
+		"@types/tmi.js": "^1.8.6",
+		"@types/ws": "^8.5.10",
 		"@typescript-eslint/eslint-plugin": "^6.0.0",
 		"@typescript-eslint/parser": "^6.0.0",
 		"eslint": "^8.56.0",
@@ -33,6 +36,10 @@
 	"type": "module",
 	"dependencies": {
 		"@magenta/sketch": "^0.2.0",
-		"p5": "^1.9.2"
+		"dotenv": "^16.4.5",
+		"express": "^4.19.1",
+		"p5": "^1.9.2",
+		"tmi.js": "^1.8.5",
+		"ws": "^8.16.0"
 	}
 }

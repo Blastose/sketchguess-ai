@@ -1,7 +1,7 @@
 <script lang="ts">
-	import p5 from 'p5';
 	import { SketchRNN } from '@magenta/sketch';
 	import type { LSTMState } from '@magenta/sketch/es5/sketch_rnn/model';
+	import { onMount } from 'svelte';
 
 	let stop = false;
 	const sketch = function (p: any) {
@@ -18,7 +18,7 @@
 		const PEN = { DOWN: 0, UP: 1, END: 2 };
 
 		// Load the model.
-		const model = new SketchRNN('http://localhost:5173/data/kangaroo.gen.json');
+		const model = new SketchRNN('http://localhost:5173/data/cat.gen.json');
 
 		/*
 		 * Main p5 code
@@ -110,9 +110,12 @@
 		}
 	};
 
-	function load(_: HTMLElement) {
+	onMount(async () => {
+		const p5 = (await import('p5')).default;
+
 		//@ts-expect-error
 		new p5(sketch, 'sketch');
+		const websocket = new WebSocket('ws://localhost:8001/'); // Listen for messages from the WebSocket connection
 
 		websocket.addEventListener('message', ({ data }) => {
 			const event = JSON.parse(data);
@@ -123,11 +126,10 @@
 				stop = false;
 			}
 		});
-	}
-	const websocket = new WebSocket('ws://localhost:8001/'); // Listen for messages from the WebSocket connection
+	});
 </script>
 
 <h1>Sketch Generation</h1>
 <p>This demo loads the <code>bird</code> SketchRNN model and generates bird sketches.</p>
 
-<div use:load id="sketch"></div>
+<div id="sketch"></div>

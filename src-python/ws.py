@@ -1,7 +1,6 @@
 import asyncio
 import websockets
 import json
-
 from sketch import SketchGame
 
 connected_clients = set()
@@ -12,15 +11,22 @@ async def handler(websocket: websockets.WebSocketServerProtocol):
 
     game = SketchGame()
     game.pick_word()
+    print(game.current_word)
 
     while True:
         try:
             message = await websocket.recv()
+            print(message)
+            if game.current_word == message:
+                print("Guessed correctly")
+                game.leaderboard.add_score("jimmy", 100)
+                game.pick_word()
+                print(game.current_word)
+
             await websocket.send(message)
             await broadcast(json.dumps(message))
-        except websockets.ConnectionClosedOK:
+        except:  # noqa: E722
             break
-        print(message)
 
 
 async def broadcast(message):
