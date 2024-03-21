@@ -3,11 +3,13 @@
 	import { SketchRNN } from '@magenta/sketch';
 	import type { LSTMState } from '@magenta/sketch/es5/sketch_rnn/model';
 
-	const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+	let stop = false;
 	const sketch = function (p: any) {
 		let modelState: LSTMState; // Store the hidden states of rnn's neurons.
 		const temperature = 0.45; // Controls the amount of uncertainty of the model.
 		let modelLoaded = false;
+		let drawingState: 'drawing' | 'paused' | 'startPause' = 'drawing';
+		let waitTill = new Date();
 
 		let dx: number, dy: number; // Offsets of the pen strokes, in pixels.
 		let x: number, y: number; // Absolute coordinates on the screen of where the pen is.
@@ -16,9 +18,7 @@
 		const PEN = { DOWN: 0, UP: 1, END: 2 };
 
 		// Load the model.
-		const model = new SketchRNN(
-			'https://storage.googleapis.com/quickdraw-models/sketchRNN/large_models/bird.gen.json'
-		);
+		const model = new SketchRNN('http://localhost:5173/data/kangaroo.gen.json');
 
 		/*
 		 * Main p5 code
@@ -42,7 +42,7 @@
 
 		// Drawing loop.
 		p.draw = function () {
-			if (!modelLoaded) {
+			if (!modelLoaded || stop) {
 				return;
 			}
 
@@ -52,25 +52,30 @@
 			}
 
 			// New state.
-			[dx, dy, ...pen] = sampleNewState();
-			console.log('s');
-
-			// Only draw on the paper if the pen is still touching the paper.
-			if (previousPen[PEN.DOWN] == 1) {
-				p.line(x, y, x + dx, y + dy); // Draw line connecting prev point to current point.
+			if (drawingState === 'startPause') {
+				let seconds = Math.random();
+				waitTill = new Date(new Date().getTime() + seconds * 1000);
+				drawingState = 'paused';
+			} else if (drawingState === 'paused') {
+				if (waitTill < new Date()) {
+					drawingState = 'drawing';
+				}
 			} else {
-				// Spin wait
-				// const seconds = Math.random();
-				// const waitTill = new Date(new Date().getTime() + seconds * 1000);
-				// while (waitTill > new Date()) {}
+				[dx, dy, ...pen] = sampleNewState();
+				// Only draw on the paper if the pen is still touching the paper.
+				if (previousPen[PEN.DOWN] == 1) {
+					p.line(x, y, x + dx, y + dy); // Draw line connecting prev point to current point.
+				} else {
+					drawingState = 'startPause';
+				}
+
+				// Update the absolute coordinates from the offsets
+				x += dx;
+				y += dy;
+
+				// Update the previous pen's state to the current one we just sampled.
+				previousPen = pen;
 			}
-
-			// Update the absolute coordinates from the offsets
-			x += dx;
-			y += dy;
-
-			// Update the previous pen's state to the current one we just sampled.
-			previousPen = pen;
 		};
 
 		/*
@@ -108,7 +113,18 @@
 	function load(_: HTMLElement) {
 		//@ts-expect-error
 		new p5(sketch, 'sketch');
+
+		websocket.addEventListener('message', ({ data }) => {
+			const event = JSON.parse(data);
+			console.log(event);
+			if (event === 'quit') {
+				stop = true;
+			} else if (event === 'start') {
+				stop = false;
+			}
+		});
 	}
+	const websocket = new WebSocket('ws://localhost:8001/'); // Listen for messages from the WebSocket connection
 </script>
 
 <h1>Sketch Generation</h1>
