@@ -8,23 +8,49 @@
 
 	export let game: Game;
 
+	let imageSrc: string;
+
+	let left: number;
+	let top: number;
+	let width: number;
+	let height: number;
+
+	function saveImage(left: number, top: number, width: number, height: number) {
+		const sourceCanavas = document.getElementById('defaultCanvas0')! as HTMLCanvasElement;
+		const destCanvas = document.createElement('canvas');
+		destCanvas.width = width;
+		destCanvas.height = height;
+		destCanvas
+			.getContext('2d')
+			?.drawImage(sourceCanavas, left, top, width, height, 0, 0, width, height);
+		return destCanvas.toDataURL('image/png');
+	}
+
+	// Load the model.
+	let model: SketchRNN;
+	initModel();
+
+	function initModel() {
+		if (model) {
+			model.dispose();
+		}
+		model = new SketchRNN(`http://localhost:5173/data/${game.currentWord}.gen.json`);
+	}
+
 	let stop = false;
+	let modelState: LSTMState; // Store the hidden states of rnn's neurons.
+	const temperature = 0.45; // Controls the amount of uncertainty of the model.
+	let modelLoaded = false;
+	let drawingState: 'drawing' | 'paused' | 'startPause' = 'drawing';
+	let waitTill = new Date();
+
+	let dx: number, dy: number; // Offsets of the pen strokes, in pixels.
+	let x: number, y: number; // Absolute coordinates on the screen of where the pen is.
+	let pen = [0, 0, 0]; // Current pen state, [pen_down, pen_up, pen_end].
+	let previousPen = [1, 0, 0]; // Previous pen state.
+	const PEN = { DOWN: 0, UP: 1, END: 2 };
+
 	const sketch = function (p: any) {
-		let modelState: LSTMState; // Store the hidden states of rnn's neurons.
-		const temperature = 0.45; // Controls the amount of uncertainty of the model.
-		let modelLoaded = false;
-		let drawingState: 'drawing' | 'paused' | 'startPause' = 'drawing';
-		let waitTill = new Date();
-
-		let dx: number, dy: number; // Offsets of the pen strokes, in pixels.
-		let x: number, y: number; // Absolute coordinates on the screen of where the pen is.
-		let pen = [0, 0, 0]; // Current pen state, [pen_down, pen_up, pen_end].
-		let previousPen = [1, 0, 0]; // Previous pen state.
-		const PEN = { DOWN: 0, UP: 1, END: 2 };
-
-		// Load the model.
-		const model = new SketchRNN('http://localhost:5173/data/cat.gen.json');
-
 		/*
 		 * Main p5 code
 		 */
@@ -60,6 +86,7 @@
 				} else if (drawingState === 'paused') {
 					if (waitTill < new Date()) {
 						drawingState = 'drawing';
+						imageSrc = saveImage(left, top, width, height);
 						restart();
 					}
 				} else {
@@ -88,6 +115,10 @@
 				// Update the absolute coordinates from the offsets
 				x += dx;
 				y += dy;
+				left = Math.min(left, x);
+				top = Math.min(top, y);
+				height = Math.max(height, y - top);
+				width = Math.max(width, x - left);
 
 				// Update the previous pen's state to the current one we just sampled.
 				previousPen = pen;
@@ -113,6 +144,10 @@
 			p.background(255, 255, 255, 255);
 			x = p.width / 2.25;
 			y = p.height / 2.25;
+			left = x;
+			top = y;
+			width = 0;
+			height = 0;
 			const lineColor = p.color(p.random(64, 224), p.random(64, 224), p.random(64, 224));
 
 			p.strokeWeight(3.0);
@@ -131,17 +166,6 @@
 
 		//@ts-expect-error
 		new p5(sketch, 'sketch');
-		const websocket = new WebSocket('ws://localhost:8001/'); // Listen for messages from the WebSocket connection
-
-		websocket.addEventListener('message', ({ data }) => {
-			const event = JSON.parse(data);
-			console.log(event);
-			if (event === 'quit') {
-				stop = true;
-			} else if (event === 'start') {
-				stop = false;
-			}
-		});
 	});
 </script>
 
@@ -150,6 +174,7 @@
 		<div class="flex gap-2">
 			<Icon name="pencil" />
 			<p>Round: {game.round}/{game.maxRounds}</p>
+			<img class="max-h-36" src={imageSrc} alt="" />
 		</div>
 
 		<div>

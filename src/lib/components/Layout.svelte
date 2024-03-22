@@ -5,8 +5,6 @@
 	import Leaderboard from './Leaderboard.svelte';
 
 	let game: Game = new Game();
-
-	let g = false;
 </script>
 
 <main class="layout">
