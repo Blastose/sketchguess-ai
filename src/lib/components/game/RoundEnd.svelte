@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Game } from '$lib/game/game';
+	import { settings } from '$lib/game/settings';
 	import { createDialog, melt } from '@melt-ui/svelte';
 	import { onDestroy } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
@@ -20,6 +21,9 @@
 		count--;
 		if (count === -1) {
 			clearInterval(timer);
+			if (!$settings.autoplay) {
+				return;
+			}
 			game.nextRound();
 			game = game;
 		}
@@ -65,8 +69,12 @@
 							game = game;
 						}}
 					>
-						<span>Continuing in {count} seconds...</span>
-						<span class="text-sm opacity-75">Or click to continue</span>
+						{#if $settings.autoplay}
+							<span>Continuing in {count} seconds...</span>
+							<span class="text-sm opacity-75">Or click to continue</span>
+						{:else}
+							<span>Continue</span>
+						{/if}
 					</button>
 				</div>
 			</div>

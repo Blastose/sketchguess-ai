@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Game } from '$lib/game/game';
+	import { currentTimeLeft } from '$lib/game/game_state';
 	import { SketchRNN } from '@magenta/sketch';
 	import type { LSTMState } from '@magenta/sketch/es5/sketch_rnn/model';
 	import { onMount } from 'svelte';
@@ -95,10 +96,14 @@
 			if (previousPen[PEN.END] === 1) {
 				if (drawingState === 'startPause') {
 					let seconds = Math.random() + 0.5;
-					waitTill = new Date(new Date().getTime() + seconds * 4000);
+					waitTill = new Date(new Date().getTime() + seconds * 5000);
 					drawingState = 'paused';
 				} else if (drawingState === 'paused') {
 					if (waitTill < new Date()) {
+						if ($currentTimeLeft < 5) {
+							// Don't start new drawing if there is no time remaining
+							return;
+						}
 						drawingState = 'drawing';
 						restart();
 					}

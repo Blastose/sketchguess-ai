@@ -2,6 +2,7 @@
 	import type { Game } from '$lib/game/game';
 	import { onDestroy } from 'svelte';
 	import Modal from './Modal.svelte';
+	import { settings } from '$lib/game/settings';
 
 	export let game: Game;
 
@@ -10,6 +11,9 @@
 		count--;
 		if (count === -1) {
 			clearInterval(timer);
+			if (!$settings.autoplay) {
+				return;
+			}
 			game.reset();
 			game.state = 'drawing';
 			game = game;
@@ -54,8 +58,12 @@
 					game = game;
 				}}
 			>
-				<span>Restarting in {count} seconds...</span>
-				<span class="text-sm opacity-75">Or click to restart</span>
+				{#if $settings.autoplay}
+					<span>Restarting in {count} seconds...</span>
+					<span class="text-sm opacity-75">Or click to restart</span>
+				{:else}
+					<span>Restart</span>
+				{/if}
 			</button>
 
 			<button

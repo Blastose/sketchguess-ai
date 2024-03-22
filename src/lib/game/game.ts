@@ -1,6 +1,5 @@
 import { Leaderboard } from './leaderboard';
-
-const words = ['bird', 'cat', 'crab', 'kangaroo', 'penguin', 'rabbit', 'sea_turtle', 'spider'];
+import { words } from './words';
 
 export class Game {
 	timer: number;

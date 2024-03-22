@@ -58,7 +58,7 @@
 	}
 
 	function connectTwitch(_: HTMLElement) {
-		const twitchChannel = 'lec';
+		const twitchChannel = 'lcs';
 		console.log(twitchChannel);
 		const client = new tmi.Client({ channels: [twitchChannel, 'blastose_'] });
 		client.connect().catch(console.error);
@@ -80,9 +80,9 @@
 <div use:connectTwitch class="h-[calc(100%-28px)]">
 	<div class="chat-container thin-scrollbar" bind:this={chatContainer}>
 		{#each chats as chat}
-			<div>
+			<div class="cool-font">
 				<Icon class="inline" name="commentOutline" />
-				<span class="font-semibold text-blue-700">{chat.username}:</span>
+				<span class="text-blue-700">{chat.username}:</span>
 				{chat.message}
 			</div>
 		{:else}
@@ -101,5 +101,9 @@
 	.chat-container {
 		overflow-y: auto;
 		height: 100%;
+	}
+
+	.cool-font {
+		font-family: 'Actor', sans-serif;
 	}
 </style>

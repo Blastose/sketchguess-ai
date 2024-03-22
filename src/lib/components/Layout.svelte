@@ -1,13 +1,20 @@
 <script lang="ts">
 	import { Game } from '$lib/game/game';
+	import { settings } from '$lib/game/settings';
 	import Chat from './Chat.svelte';
 	import GameArea from './game/GameArea.svelte';
 	import Leaderboard from './Leaderboard.svelte';
 
-	let game: Game = new Game(60, 2);
+	let game: Game = new Game($settings.timer, $settings.rounds);
+
+	$: if ($settings) {
+		game.maxRounds = $settings.rounds;
+		game.timer = $settings.timer;
+		game = game;
+	}
 </script>
 
-<div class="container mx-auto">
+<div class="max-w-[1536px] mx-auto">
 	<main class="layout">
 		<header
 			class="header text-4xl font-bold drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-white flex items-center"
