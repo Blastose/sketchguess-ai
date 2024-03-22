@@ -10,6 +10,8 @@
 	let top: number;
 	let width: number;
 	let height: number;
+	let right: number;
+	let bottom: number;
 
 	export function saveImage() {
 		const sourceCanavas = document.getElementById('defaultCanvas0')! as HTMLCanvasElement;
@@ -128,8 +130,10 @@
 				y += dy;
 				left = Math.min(left, x);
 				top = Math.min(top, y);
-				height = Math.max(height, y - top);
-				width = Math.max(width, x - left);
+				right = Math.max(right, x);
+				bottom = Math.max(bottom, y);
+				width = Math.abs(right - left);
+				height = Math.abs(bottom - top);
 
 				// Update the previous pen's state to the current one we just sampled.
 				previousPen = pen;
@@ -156,7 +160,9 @@
 			x = p.width / 2.25;
 			y = p.height / 2.25;
 			left = x;
+			right = x;
 			top = y;
+			bottom = y;
 			width = 0;
 			height = 0;
 			const lineColor = p.color(p.random(64, 224), p.random(64, 224), p.random(64, 224));

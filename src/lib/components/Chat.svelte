@@ -4,6 +4,7 @@
 	import { PUBLIC_TWITCH_CHANNEL } from '$env/static/public';
 	import Icon from './Icon.svelte';
 	import type { Game } from '$lib/game/game';
+	import { currentTimeLeft } from '$lib/game/game_state';
 
 	export let game: Game;
 
@@ -68,7 +69,7 @@
 			if (game.state !== 'drawing') {
 				return;
 			}
-			if (game.guess(username, message, game.timeLeft)) {
+			if (game.guess(username, message, $currentTimeLeft)) {
 				game = game;
 			}
 		});
@@ -81,7 +82,7 @@
 		{#each chats as chat}
 			<div>
 				<Icon class="inline" name="commentOutline" />
-				<span class="font-semibold">{chat.username}:</span>
+				<span class="font-semibold text-blue-700">{chat.username}:</span>
 				{chat.message}
 			</div>
 		{:else}

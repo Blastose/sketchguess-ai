@@ -3,8 +3,12 @@
 @tailwind utilities;
 
 html {
+	--grid-color: #6e95dd;
 	overflow-wrap: anywhere;
-	scrollbar-gutter: stable;
+	background-color: rgb(147 197 253);
+	background-image: linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+		linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+	background-size: 40px 40px;
 }
 
 .thin-scrollbar {

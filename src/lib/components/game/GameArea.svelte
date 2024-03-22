@@ -25,7 +25,7 @@
 
 		<button
 			on:click={() => {
-				game.start();
+				game.startDrawing();
 				game = game;
 			}}
 			class="pl-6 pr-8 py-4 flex gap-8 items-center text-3xl font-bold bg-blue-500 hover:bg-blue-600 rounded-md text-white"

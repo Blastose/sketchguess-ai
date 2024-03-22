@@ -7,16 +7,24 @@
 	let game: Game = new Game(60, 2);
 </script>
 
-<main class="layout">
-	<header class="header text-3xl font-bold flex items-center">SketchGuessAI</header>
-	<section class="leaderboard ring ring-blue-600 rounded-md p-2"><Leaderboard bind:game /></section>
-	<section class="chat ring ring-blue-600 rounded-md p-2">
-		<Chat bind:game />
-	</section>
-	<section class="drawingarea ring ring-blue-600 rounded-md p-2">
-		<GameArea bind:game />
-	</section>
-</main>
+<div class="container mx-auto">
+	<main class="layout">
+		<header
+			class="header text-4xl font-bold drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-white flex items-center"
+		>
+			SketchGuessAI
+		</header>
+		<section class="leaderboard ring ring-blue-500 rounded-md p-2">
+			<Leaderboard bind:game />
+		</section>
+		<section class="chat ring ring-blue-500 rounded-md p-2">
+			<Chat bind:game />
+		</section>
+		<section class="drawingarea ring ring-blue-500 rounded-md p-4">
+			<GameArea bind:game />
+		</section>
+	</main>
+</div>
 
 <style>
 	.layout {
@@ -28,8 +36,8 @@
 		grid-template-columns: 256px 1fr;
 		grid-template-rows: min-content 1fr 2fr;
 		height: 100dvh;
-		padding: 1rem;
-		gap: 1rem;
+		padding: 2rem;
+		gap: 2rem;
 	}
 
 	.header {

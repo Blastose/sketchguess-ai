@@ -19,30 +19,25 @@
 			src = saveImage();
 		}
 	}
+
+	$: console.log(game.currentWord);
 </script>
 
 <div class="drawingarea-container">
-	<div>
-		<div class="flex gap-2">
-			<Icon name="pencil" />
-			<p>Round: {game.round}/{game.maxRounds} - {game.state}</p>
-			<button
+	<div class="flex whitespace-nowrap">
+		<p><Icon class="inline" name="pencil" /> Round: {game.round}/{game.maxRounds}</p>
+		<!-- <p>{game.state}</p> -->
+		<!-- <button
 				on:click={() => {
 					pauseDrawing();
 					src = saveImage();
-					game.state = 'drawing_ended';
-					// game.nextRound();
+					game.stopDrawing();
 					game = game;
 				}}>Next round</button
-			>
-		</div>
-
-		<div>
-			Current word: {game.currentWord}
-		</div>
+			> -->
 
 		<Timer
-			timeLeft={60}
+			timeLeft={game.timer}
 			bind:game
 			{pauseDrawing}
 			saveImage={() => {
@@ -52,6 +47,10 @@
 			{resetTimer}
 			{stopTimer}
 		/>
+
+		<p class="invisible">
+			<Icon class="inline" name="pencil" /> Round: {game.round}/{game.maxRounds}
+		</p>
 	</div>
 
 	{#key game.currentWord}

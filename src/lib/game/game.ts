@@ -4,7 +4,6 @@ const words = ['bird', 'cat', 'crab', 'kangaroo', 'penguin', 'rabbit', 'sea_turt
 
 export class Game {
 	timer: number;
-	timeLeft: number;
 	words: string[];
 	currentWord: string;
 	leaderboard: Leaderboard;
@@ -21,7 +20,6 @@ export class Game {
 		this.leaderboard = new Leaderboard();
 		this.round = 1;
 		this.maxRounds = maxRounds;
-		this.timeLeft = timer;
 		this.roundWinner = { username: undefined, word: this.currentWord };
 	}
 
@@ -31,18 +29,20 @@ export class Game {
 		this.leaderboard = new Leaderboard();
 		this.roundWinner = { username: undefined, word: this.currentWord };
 		this.round = 1;
-		this.timeLeft = this.timer;
 		this.state = 'start_screen';
 		console.log(this.currentWord);
 	}
 
-	start() {
+	startDrawing() {
 		this.state = 'drawing';
+	}
+
+	stopDrawing() {
+		this.state = 'drawing_ended';
 	}
 
 	nextRound() {
 		this.round++;
-		this.timeLeft = this.timer;
 		this.pickWord();
 		this.roundWinner = { username: undefined, word: this.currentWord };
 		if (this.round > this.maxRounds) {
