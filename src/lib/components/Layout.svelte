@@ -4,21 +4,21 @@
 	import GameArea from './game/GameArea.svelte';
 	import Leaderboard from './Leaderboard.svelte';
 
-	let game: Game = new Game();
+	let game: Game = new Game(60, 2);
 </script>
 
 <main class="layout">
 	<header class="header text-3xl font-bold flex items-center">SketchGuessAI</header>
-	<section class="leaderboard ring ring-black rounded-md p-2"><Leaderboard bind:game /></section>
-	<section class="chat ring ring-black rounded-md p-2">
+	<section class="leaderboard ring ring-blue-600 rounded-md p-2"><Leaderboard bind:game /></section>
+	<section class="chat ring ring-blue-600 rounded-md p-2">
 		<Chat bind:game />
 	</section>
-	<section class="drawingarea ring ring-black rounded-md p-2">
+	<section class="drawingarea ring ring-blue-600 rounded-md p-2">
 		<GameArea bind:game />
 	</section>
 </main>
 
-<style style="postcss">
+<style>
 	.layout {
 		display: grid;
 		grid-template-areas:

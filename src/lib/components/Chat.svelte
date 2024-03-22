@@ -57,16 +57,18 @@
 	}
 
 	function connectTwitch(_: HTMLElement) {
-		const twitchChannel = PUBLIC_TWITCH_CHANNEL;
-		const client = new tmi.Client({ channels: [twitchChannel] });
+		const twitchChannel = 'lec';
+		console.log(twitchChannel);
+		const client = new tmi.Client({ channels: [twitchChannel, 'blastose_'] });
 		client.connect().catch(console.error);
-		client.on('message', (channel, tags, message) => {
-			console.log(tags['display-name'], message);
+		client.on('message', (_, tags, message) => {
 			const username = tags['display-name'] ?? 'user';
 			addChat({ username, message });
 
+			if (game.state !== 'drawing') {
+				return;
+			}
 			if (game.guess(username, message, game.timeLeft)) {
-				game.nextRound();
 				game = game;
 			}
 		});
@@ -82,6 +84,8 @@
 				<span class="font-semibold">{chat.username}:</span>
 				{chat.message}
 			</div>
+		{:else}
+			<p class="italic">No messages so far</p>
 		{/each}
 	</div>
 </div>

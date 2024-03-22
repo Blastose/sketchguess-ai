@@ -22,6 +22,8 @@
 					<Icon class="inline fill-yellow-500" name="starCircle" />
 				</div>
 			</div>
+		{:else}
+			<p class="italic">None</p>
 		{/each}
 	</div>
 </div>

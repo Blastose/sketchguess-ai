@@ -6,9 +6,13 @@
 
 	export let game: Game;
 	export let timeLeft: number;
+	export let pauseDrawing: () => void;
+	export let saveImage: () => void;
+
 	export const resetTimer = () => {
 		state = 'stopped';
 		count = timeLeft;
+		value.set(0);
 		clearInterval(timer);
 	};
 	export const stopTimer = () => {
@@ -22,8 +26,8 @@
 		timer = setInterval(function () {
 			count--;
 			game.timeLeft = count;
-			game = game;
-			value.set(timeLeft - count);
+			console.log(count);
+			value.set(((timeLeft - count) / timeLeft) * 100);
 			if (count === -1) {
 				state = 'finished';
 				clearInterval(timer);
@@ -32,9 +36,26 @@
 		}, 1000);
 	};
 
+	// TODO fix timer not resetting
+
 	let count = timeLeft;
 	let state: 'stopped' | 'playing' | 'finished' = 'stopped';
 	let timer: ReturnType<typeof setInterval>;
+
+	$: if (game.state === 'drawing') {
+		startTimer();
+	} else if (game.state === 'drawing_ended') {
+		stopTimer();
+	}
+
+	$: if (count === 0) {
+		count = timeLeft;
+		value.set(0);
+		pauseDrawing();
+		saveImage();
+		game.state = 'drawing_ended';
+		game = game;
+	}
 
 	const value = writable(0);
 </script>

@@ -1,5 +1,7 @@
 <script lang="ts">
+	import type { Game } from '$lib/game/game';
 	import { createDialog, melt } from '@melt-ui/svelte';
+	import { onDestroy } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
 
 	const {
@@ -9,9 +11,23 @@
 		forceVisible: true
 	});
 
-	export let name: string;
-	export let word: string;
+	export let game: Game;
+	export let roundWinner: { username: string | undefined; word: string };
 	export let src: string;
+
+	let count = 10;
+	let timer = setInterval(function () {
+		count--;
+		if (count === -1) {
+			clearInterval(timer);
+			game.nextRound();
+			game = game;
+		}
+	}, 1000);
+
+	onDestroy(() => {
+		clearInterval(timer);
+	});
 </script>
 
 <div class="" use:melt={$portalled}>
@@ -32,16 +48,26 @@
 			use:melt={$content}
 		>
 			<div class="flex flex-col gap-8">
-				<h2 class="font-bold text-3xl">{name} guessed it!</h2>
+				{#if roundWinner.username}
+					<h2 class="font-bold text-3xl">{roundWinner.username} guessed it!</h2>
+				{:else}
+					<h2 class="font-bold text-3xl">No one guessed the word!</h2>
+				{/if}
+				<img class="max-h-[350px] object-contain" {src} alt="" />
 
-				<img {src} alt="" />
+				<p class="text-lg">The word was <span class="font-bold">{roundWinner.word}</span></p>
 
-				<p>The word was {word}</p>
 				<div class="flex items-center justify-center">
 					<button
-						class="bg-blue-500 hover:bg-blue-600 px-8 py-2 rounded-md text-white font-bold text-lg"
-						on:click={() => {}}>Continue</button
+						class="flex flex-col gap-1 items-center bg-blue-500 hover:bg-blue-600 px-8 py-2 rounded-md text-white font-bold text-lg"
+						on:click={() => {
+							game.nextRound();
+							game = game;
+						}}
 					>
+						<span>Continuing in {count} seconds...</span>
+						<span class="text-sm opacity-75">Or click to continue</span>
+					</button>
 				</div>
 			</div>
 		</div>
