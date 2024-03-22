@@ -145,11 +145,14 @@ class SketchGame:
 
 # Start game
 # Pick one word out of the 75 and remove it from the pool
+#   Drawer is choosing a word
+#   Countdown from 3, 2, 1
 # Start timer -> 60 seconds
 # Send message to start drawing
 # Users in twitch chat start guessing the word
 #   If the user gets it, give the user points based on time remaning
 #   Else, wait until time runs out; no one gets points
 # Display the word and if a user got the word
+#   Modal + timer at bottom; Next word in 3, 2, 1 + show image of drawn so far
 # Start new word -> loop until 10 words
-# After 10 words, game ends, show leaderboard
+# After 10 words, game ends, show leaderboard + restart button

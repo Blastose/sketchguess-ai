@@ -1,8 +1,12 @@
 <script lang="ts">
 	import Timer from '$lib/components/Timer.svelte';
+	import type { Game } from '$lib/game/game';
 	import { SketchRNN } from '@magenta/sketch';
 	import type { LSTMState } from '@magenta/sketch/es5/sketch_rnn/model';
 	import { onMount } from 'svelte';
+	import Icon from '../Icon.svelte';
+
+	export let game: Game;
 
 	let stop = false;
 	const sketch = function (p: any) {
@@ -19,7 +23,7 @@
 		const PEN = { DOWN: 0, UP: 1, END: 2 };
 
 		// Load the model.
-		const model = new SketchRNN('http://localhost:5173/data/crab.gen.json');
+		const model = new SketchRNN('http://localhost:5173/data/cat.gen.json');
 
 		/*
 		 * Main p5 code
@@ -49,7 +53,18 @@
 
 			// If we finished the previous drawing, start a new one.
 			if (previousPen[PEN.END] === 1) {
-				restart();
+				if (drawingState === 'startPause') {
+					let seconds = Math.random() + 0.5;
+					waitTill = new Date(new Date().getTime() + seconds * 3000);
+					drawingState = 'paused';
+				} else if (drawingState === 'paused') {
+					if (waitTill < new Date()) {
+						drawingState = 'drawing';
+						restart();
+					}
+				} else {
+					drawingState = 'startPause';
+				}
 			}
 
 			// New state.
@@ -132,10 +147,23 @@
 
 <div class="l">
 	<div>
-		<h1>Sketch Generation</h1>
-		<p>This demo loads the <code>bird</code> SketchRNN model and generates bird sketches.</p>
+		<div class="flex gap-2">
+			<Icon name="pencil" />
+			<p>Round: {game.round}/{game.maxRounds}</p>
+		</div>
 
-		<Timer timeLeft={2} />
+		<div>
+			Current word: {game.currentWord}
+		</div>
+
+		<button
+			on:click={() => {
+				game.nextRound();
+				game = game;
+			}}>Round</button
+		>
+
+		<Timer timeLeft={60} bind:game />
 	</div>
 
 	<div id="sketch"></div>

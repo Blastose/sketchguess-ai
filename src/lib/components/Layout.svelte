@@ -1,21 +1,26 @@
 <script lang="ts">
+	import { Game } from '$lib/game/game';
 	import Chat from './Chat.svelte';
-	import Drawingarea from './Drawingarea.svelte';
+	import GameArea from './game/GameArea.svelte';
 	import Leaderboard from './Leaderboard.svelte';
+
+	let game: Game = new Game();
+
+	let g = false;
 </script>
 
 <main class="layout">
 	<header class="header text-3xl font-bold flex items-center">SketchGuessAI</header>
-	<section class="leaderboard"><Leaderboard /></section>
-	<section class="chat">
-		<Chat />
+	<section class="leaderboard ring ring-black rounded-md p-2"><Leaderboard bind:game /></section>
+	<section class="chat ring ring-black rounded-md p-2">
+		<Chat bind:game />
 	</section>
-	<section class="drawingarea">
-		<Drawingarea />
+	<section class="drawingarea ring ring-black rounded-md p-2">
+		<GameArea bind:game />
 	</section>
 </main>
 
-<style>
+<style style="postcss">
 	.layout {
 		display: grid;
 		grid-template-areas:

@@ -3,6 +3,9 @@
 	import tmi from 'tmi.js';
 	import { PUBLIC_TWITCH_CHANNEL } from '$env/static/public';
 	import Icon from './Icon.svelte';
+	import type { Game } from '$lib/game/game';
+
+	export let game: Game;
 
 	type ChatMessage = { username: string; message: string };
 
@@ -38,7 +41,7 @@
 
 	let chatContainer: HTMLElement;
 	const scrollToBottom = () => {
-		chatContainer.scroll({ top: chatContainer.scrollHeight });
+		chatContainer?.scroll({ top: chatContainer?.scrollHeight });
 	};
 
 	async function addChat(chatMessage: ChatMessage) {
@@ -59,7 +62,13 @@
 		client.connect().catch(console.error);
 		client.on('message', (channel, tags, message) => {
 			console.log(tags['display-name'], message);
-			addChat({ username: tags['display-name'] ?? 'user', message });
+			const username = tags['display-name'] ?? 'user';
+			addChat({ username, message });
+
+			if (game.guess(username, message, game.timeLeft)) {
+				game.nextRound();
+				game = game;
+			}
 		});
 	}
 </script>
