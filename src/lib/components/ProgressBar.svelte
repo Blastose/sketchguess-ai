@@ -13,7 +13,7 @@
 	});
 </script>
 
-<div use:melt={$root} class="relative h-2 w-full overflow-hidden rounded-[99999px] bg-black/40">
+<div use:melt={$root} class="relative h-2 w-full overflow-hidden rounded-[99999px] bg-black/20">
 	<div
 		class="h-full w-full bg-blue-500 transition-transform duration-[660ms]
         ease-[cubic-bezier(0.65,0,0.35,1)]"

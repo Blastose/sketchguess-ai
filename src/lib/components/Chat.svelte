@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import tmi from 'tmi.js';
-	import { PUBLIC_TWITCH_CHANNEL } from '$env/static/public';
 	import Icon from './Icon.svelte';
 	import type { Game } from '$lib/game/game';
 	import { currentTimeLeft } from '$lib/game/game_state';
+	import { settings } from '$lib/game/settings';
 
 	export let game: Game;
 
@@ -58,9 +58,7 @@
 	}
 
 	function connectTwitch(_: HTMLElement) {
-		const twitchChannel = 'lcs';
-		console.log(twitchChannel);
-		const client = new tmi.Client({ channels: [twitchChannel, 'blastose_'] });
+		const client = new tmi.Client({ channels: [$settings.twitchChannel] });
 		client.connect().catch(console.error);
 		client.on('message', (_, tags, message) => {
 			const username = tags['display-name'] ?? 'user';
@@ -80,7 +78,7 @@
 <div use:connectTwitch class="h-[calc(100%-28px)]">
 	<div class="chat-container thin-scrollbar" bind:this={chatContainer}>
 		{#each chats as chat}
-			<div class="cool-font">
+			<div>
 				<Icon class="inline" name="commentOutline" />
 				<span class="text-blue-700">{chat.username}:</span>
 				{chat.message}
@@ -101,9 +99,5 @@
 	.chat-container {
 		overflow-y: auto;
 		height: 100%;
-	}
-
-	.cool-font {
-		font-family: 'Actor', sans-serif;
 	}
 </style>

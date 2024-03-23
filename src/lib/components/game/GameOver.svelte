@@ -3,6 +3,7 @@
 	import { onDestroy } from 'svelte';
 	import Modal from './Modal.svelte';
 	import { settings } from '$lib/game/settings';
+	import Confetti from '../Confetti.svelte';
 
 	export let game: Game;
 
@@ -25,6 +26,7 @@
 	});
 </script>
 
+<Confetti particleCount={125} />
 <Modal>
 	<div class="flex flex-col gap-8">
 		<div class="flex flex-col items-center justify-center gap-4">

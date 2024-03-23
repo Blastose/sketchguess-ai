@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Timer from '$lib/components/Timer.svelte';
-	import type { Game } from '$lib/game/game';
+	import { generateWordHint, type Game } from '$lib/game/game';
 	import { currentTimeLeft } from '$lib/game/game_state';
 	import Icon from '../Icon.svelte';
 	import Canvas from './Canvas.svelte';
@@ -66,13 +66,16 @@
 
 		<div class="flex justify-center text-lg">
 			<div class="flex gap-1 {$currentTimeLeft < game.timer / 3 ? 'visible' : 'invisible'}">
-				<!-- svelte-ignore empty-block -->
-				{#each game.currentWord as l}<span
-						>{#if l !== ' '}_{:else}
-							<span class="invisible">_</span>
-						{/if}</span
-					>{/each}
-				<sup class="top-0">{game.currentWord.length}</sup>
+				<!-- Display character hints -->
+				{#each generateWordHint(game.currentWord) as l}<span>
+						{#if l !== ' '}
+							{l}
+						{:else}
+							<span class="invisible">__</span>
+						{/if}
+					</span>
+				{/each}
+				<sup class="top-[4px]">{game.currentWord.length}</sup>
 			</div>
 		</div>
 	</div>

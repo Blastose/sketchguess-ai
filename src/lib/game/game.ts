@@ -68,3 +68,29 @@ export class Game {
 		return false;
 	}
 }
+
+export function generateWordHint(word: string) {
+	const wordLength = word.length;
+	const hintLettersCount = Math.ceil(wordLength / 4);
+
+	const revealedPositions = new Set<number>();
+	while (revealedPositions.size < hintLettersCount) {
+		const position = Math.floor(Math.random() * wordLength);
+		revealedPositions.add(position);
+	}
+
+	let hintWord = '';
+	for (let i = 0; i < wordLength; i++) {
+		if (revealedPositions.has(i)) {
+			hintWord += word[i];
+		} else {
+			if (word[i] === ' ') {
+				hintWord += word[i];
+			} else {
+				hintWord += '_';
+			}
+		}
+	}
+
+	return hintWord;
+}

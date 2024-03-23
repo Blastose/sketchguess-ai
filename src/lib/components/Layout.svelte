@@ -3,6 +3,7 @@
 	import { settings } from '$lib/game/settings';
 	import Chat from './Chat.svelte';
 	import GameArea from './game/GameArea.svelte';
+	import Icon from './Icon.svelte';
 	import Leaderboard from './Leaderboard.svelte';
 
 	let game: Game = new Game($settings.timer, $settings.rounds);
@@ -17,17 +18,19 @@
 <div class="max-w-[1536px] mx-auto">
 	<main class="layout">
 		<header
-			class="header text-4xl font-bold drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-white flex items-center"
+			class="header text-4xl font-bold drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-white flex items-center gap-2"
 		>
-			SketchGuessAI
+			<Icon width="36" height="36" name="paletteOutline" />SketchGuessAI
 		</header>
-		<section class="leaderboard ring ring-blue-500 rounded-md p-2">
+		<section class="shadow-xl leaderboard ring ring-blue-500 rounded-md p-2">
 			<Leaderboard bind:game />
 		</section>
-		<section class="chat ring ring-blue-500 rounded-md p-2">
-			<Chat bind:game />
+		<section class="shadow-xl chat ring ring-blue-500 rounded-md p-2">
+			{#key $settings.twitchChannel}
+				<Chat bind:game />
+			{/key}
 		</section>
-		<section class="drawingarea ring ring-blue-500 rounded-md p-4">
+		<section class="shadow-xl drawingarea ring ring-blue-500 rounded-md p-4">
 			<GameArea bind:game />
 		</section>
 	</main>
@@ -53,18 +56,18 @@
 
 	.leaderboard {
 		grid-area: leaderboard;
-		background-color: white;
+		background-color: rgb(255, 242, 223);
 		overflow: hidden;
 	}
 
 	.chat {
 		grid-area: chat;
-		background-color: white;
+		background-color: rgb(212, 229, 255);
 		overflow: hidden;
 	}
 
 	.drawingarea {
 		grid-area: drawingarea;
-		background-color: white;
+		background-color: rgb(255, 254, 253);
 	}
 </style>

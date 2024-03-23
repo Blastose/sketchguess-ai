@@ -4,6 +4,7 @@
 	import { createDialog, melt } from '@melt-ui/svelte';
 	import { onDestroy } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
+	import Confetti from '../Confetti.svelte';
 
 	const {
 		elements: { trigger, overlay, content, title, description, close, portalled },
@@ -33,6 +34,10 @@
 		clearInterval(timer);
 	});
 </script>
+
+{#if roundWinner.username}
+	<Confetti particleCount={100} />
+{/if}
 
 <div class="" use:melt={$portalled}>
 	{#if true}
