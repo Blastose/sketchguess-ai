@@ -48,7 +48,7 @@
 			model.dispose();
 		}
 		model = new SketchRNN(
-			`http://localhost:5173/data/${game.currentWord.replaceAll(' ', '_')}.gen.json`
+			`/data/${game.currentWord.replaceAll(' ', '_')}.gen.json`
 		);
 	}
 
