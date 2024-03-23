@@ -106,5 +106,6 @@
 	.dropdown {
 		border-radius: 0.375rem;
 		padding: 0 2rem 0 0.125rem;
+		background-color: white;
 	}
 </style>

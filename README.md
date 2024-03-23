@@ -2,6 +2,10 @@
 
 SketchGuessAI is a web game where you guess what an AI is drawing.
 
+> ⚠️ The models used to generate the images are about 3mb each, so the project size is about 250~300mb.
+
+You can try out the game at https://sketchguess-ai.vercel.app/
+
 ![Home](./readme-files/game_home.jpeg)
 
 ## Getting Started
@@ -44,3 +48,7 @@ Dataset from:
 ![Drawing](./readme-files/game_drawing.jpeg)
 ![Guess](./readme-files/game_guess.jpeg)
 ![Game over](./readme-files/game_over.jpeg)
+
+## License
+
+This project is licensed under the [Apache-2.0](LICENSE).
