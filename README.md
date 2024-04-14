@@ -4,7 +4,7 @@ SketchGuessAI is a Pictionary-like web game where you guess what an AI is drawin
 
 > ⚠️ The models used to generate the images are about 3mb each, so the project size is about 250~300mb.
 
-You can try out the game at https://sketchguess-ai.vercel.app/.
+You can try out the game at https://sketchguess-ai.pages.dev
 
 To play, type your guess in to the Twitch chat channel you have set, and try to earn the most points!
 
